@@ -15,7 +15,7 @@ const connectDB = require('./config/database');
 connectDB();
 
 // Route files
-const auth = require('./routes/authRoutes');
+const products = require('./routes/productRoutes.js');
 const products = require('./routes/productRoutes');
 const orders = require('./routes/orderRoutes');
 const payments = require('./routes/paymentRoutes');

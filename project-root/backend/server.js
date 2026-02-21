@@ -16,7 +16,6 @@ connectDB();
 
 // Route files
 const products = require('./routes/productRoutes.js');
-const products = require('./routes/productRoutes');
 const orders = require('./routes/orderRoutes');
 const payments = require('./routes/paymentRoutes');
 const admin = require('./routes/adminRoutes');

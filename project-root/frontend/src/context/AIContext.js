@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { toast } from 'react-hot-toast';
 
 export const AIContext = createContext();
@@ -10,7 +10,7 @@ export const AIProvider = ({ children }) => {
   const generateDescription = async (productName, category, features) => {
     setLoading(true);
     try {
-      const res = await axios.post('/ai/generate-description', { productName, category, features });
+      const res = await api.post('/ai/generate-description', { productName, category, features });
       setLoading(false);
       return res.data.data;
     } catch (error) {
@@ -23,7 +23,7 @@ export const AIProvider = ({ children }) => {
   const getPricingSuggestion = async (productName, category, marketData) => {
     setLoading(true);
     try {
-      const res = await axios.post('/ai/pricing', { productName, category, marketData });
+      const res = await api.post('/ai/pricing', { productName, category, marketData });
       setLoading(false);
       return res.data.data.suggestion;
     } catch (error) {
@@ -36,7 +36,7 @@ export const AIProvider = ({ children }) => {
   const predictSales = async (productData, historicalSales) => {
     setLoading(true);
     try {
-      const res = await axios.post('/ai/predict-sales', { productData, historicalSales });
+      const res = await api.post('/ai/predict-sales', { productData, historicalSales });
       setLoading(false);
       return res.data.data;
     } catch (error) {
@@ -49,7 +49,7 @@ export const AIProvider = ({ children }) => {
   const getRecommendations = async (userHistory, currentProducts) => {
     setLoading(true);
     try {
-      const res = await axios.post('/ai/recommendations', { userHistory, currentProducts });
+      const res = await api.post('/ai/recommendations', { userHistory, currentProducts });
       setLoading(false);
       return res.data.data.recommendations;
     } catch (error) {
@@ -62,7 +62,7 @@ export const AIProvider = ({ children }) => {
   const getAnalyticsInsights = async (data) => {
     setLoading(true);
     try {
-      const res = await axios.post('/ai/analytics-insights', { data });
+      const res = await api.post('/ai/analytics-insights', { data });
       setLoading(false);
       return res.data.data;
     } catch (error) {

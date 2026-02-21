@@ -31,7 +31,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrderHistory />} />
-          {user && user.role === 'admin' && <Route path="/admin" element={<AdminPanel />} />}
+          {user && user.role === 'admin' && <Route path="/admin/*" element={<AdminPanel />} />}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

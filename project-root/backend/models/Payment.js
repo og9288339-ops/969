@@ -52,7 +52,6 @@ const PaymentSchema = new mongoose.Schema({
   }
 });
 
-// Update updatedAt on save
 PaymentSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();

@@ -4,7 +4,7 @@ const Order = require('../models/Order');
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select('-password');
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -13,7 +13,7 @@ exports.getUsers = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate('seller');
+    const products = await Product.find().populate('seller', 'name email');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -22,7 +22,7 @@ exports.getProducts = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate('user products.product');
+    const orders = await Order.find().populate('user', 'name email').populate('products.product');
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });

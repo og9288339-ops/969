@@ -46,11 +46,3 @@ const AdminDashboard = () => {
           <div className="card">
             <h4>Total Revenue</h4>
             <p>${stats.totalRevenue || 0}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default AdminDashboard;

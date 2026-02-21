@@ -44,15 +44,25 @@ const Header = () => {
               <Link to="/profile" style={{ textDecoration: 'none', color: '#333' }}>
                 <FaUser size={20} />
               </Link>
-              {user.role === 'admin' && <Link to="/admin" style={{ textDecoration: 'none', color: '#333' }}>Admin</Link>}
-              <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#333' }}>
+              {user.role === 'admin' && (
+                <Link to="/admin" style={{ textDecoration: 'none', color: '#333', fontWeight: 'bold' }}>
+                  Admin
+                </Link>
+              )}
+              <button 
+                onClick={handleLogout} 
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#333', display: 'flex', alignItems: 'center' }}
+                title="Logout"
+              >
                 <FaSignOutAlt size={20} />
               </button>
             </>
           ) : (
             <>
               <Link to="/login" style={{ textDecoration: 'none', color: '#333' }}>Login</Link>
-              <Link to="/register" style={{ textDecoration: 'none', color: '#333' }}>Register</Link>
+              <Link to="/register" style={{ textDecoration: 'none', color: '#333', background: '#007bff', color: '#fff', padding: '0.5rem 1rem', borderRadius: '4px' }}>
+                Register
+              </Link>
             </>
           )}
         </div>

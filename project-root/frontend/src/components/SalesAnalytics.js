@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import api from '../utils/api';
 import { useAI } from '../hooks/useAI';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const SalesAnalytics = () => {
   const [analytics, setAnalytics] = useState({});
@@ -37,6 +57,9 @@ const SalesAnalytics = () => {
       label: 'Monthly Revenue',
       data: analytics.monthlyRevenue?.map(item => item.revenue) || [],
       backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      fill: false,
+      tension: 0.1
     }]
   };
 

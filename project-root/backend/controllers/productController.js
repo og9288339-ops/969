@@ -2,7 +2,7 @@ const Product = require('../models/Product');
 
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate('category seller');
+    const products = await Product.find().populate('category').populate('seller', 'name email');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -12,7 +12,15 @@ exports.getProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
   const { name, description, price, category, images, stock } = req.body;
   try {
-    const product = new Product({ name, description, price, category, images, stock, seller: req.user.id });
+    const product = new Product({ 
+      name, 
+      description, 
+      price, 
+      category, 
+      images, 
+      stock, 
+      seller: req.user.id 
+    });
     await product.save();
     res.status(201).json(product);
   } catch (error) {

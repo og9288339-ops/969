@@ -16,7 +16,9 @@ const OrderTracking = ({ orderId }) => {
       }
       setLoading(false);
     };
-    fetchOrder();
+    if (orderId) {
+      fetchOrder();
+    }
   }, [orderId]);
 
   if (loading) return <div className="loading">Loading...</div>;
@@ -28,22 +30,56 @@ const OrderTracking = ({ orderId }) => {
   return (
     <div className="card">
       <h2>Order Tracking</h2>
-      <p>Order ID: {order._id}</p>
-      <p>Status: {order.status}</p>
-      <p>Ordered on: {formatDate(order.createdAt)}</p>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+      <div style={{ marginBottom: '1.5rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
+        <p><strong>Order ID:</strong> {order._id}</p>
+        <p><strong>Status:</strong> <span className={`status-badge ${order.status}`}>{order.status}</span></p>
+        <p><strong>Ordered on:</strong> {formatDate(order.createdAt)}</p>
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', position: 'relative' }}>
         {statusSteps.map((step, index) => (
-          <div key={step} style={{ textAlign: 'center', flex: 1 }}>
+          <div key={step} style={{ textAlign: 'center', flex: 1, zIndex: 1 }}>
             <div style={{
-              width: '20px',
-              height: '20px',
+              width: '30px',
+              height: '30px',
               borderRadius: '50%',
               background: index <= currentStep ? '#007bff' : '#ddd',
-              margin: '0 auto 0.5rem'
-            }}></div>
-            <p style={{ fontSize: '0.8rem' }}>{step.charAt(0).toUpperCase() + step.slice(1)}</p>
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 0.5rem',
+              fontWeight: 'bold',
+              transition: 'background 0.3s ease'
+            }}>
+              {index + 1}
+            </div>
+            <p style={{ 
+              fontSize: '0.8rem', 
+              fontWeight: index === currentStep ? 'bold' : 'normal',
+              color: index <= currentStep ? '#007bff' : '#666'
+            }}>
+              {step.charAt(0).toUpperCase() + step.slice(1)}
+            </p>
           </div>
         ))}
+        {/* خط الواصل بين الخطوات */}
+        <div style={{
+          position: 'absolute',
+          top: '15px',
+          left: '12%',
+          right: '12%',
+          height: '2px',
+          background: '#ddd',
+          zIndex: 0
+        }}>
+          <div style={{
+            width: `${(currentStep / (statusSteps.length - 1)) * 100}%`,
+            height: '100%',
+            background: '#007bff',
+            transition: 'width 0.5s ease'
+          }}></div>
+        </div>
       </div>
     </div>
   );

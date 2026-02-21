@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.post('/pricing', authenticate, pricingSuggestion);
 router.post('/optimize', authenticate, productOptimization);
-router
+router.post('/recommendations', authenticate, recommendations);
+
+module.exports = router;

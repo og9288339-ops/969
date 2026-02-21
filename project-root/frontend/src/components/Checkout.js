@@ -17,13 +17,19 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement order creation logic
+    // هنا بيتم الربط مع الـ Backend (orders route)
     console.log('Order submitted', { cart, shippingAddress, paymentMethod });
+    // بعد نجاح الطلب بنمسح السلة
     clearCart();
+    alert('Order placed successfully! 🚀');
   };
 
   if (!user) {
-    return <p>Please log in to checkout.</p>;
+    return <p style={{ textAlign: 'center', padding: '2rem' }}>Please log in to checkout.</p>;
+  }
+
+  if (cart.length === 0) {
+    return <p style={{ textAlign: 'center', padding: '2rem' }}>Your cart is empty.</p>;
   }
 
   return (
@@ -61,10 +67,20 @@ const Checkout = () => {
             required
           />
         </div>
-        <PaymentSelection paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
-        <div style={{ marginTop: '1rem' }}>
-          <h3>Total: {formatCurrency(getTotal())}</h3>
-          <button type="submit" className="btn" style={{ width: '100%' }}>Place Order</button>
+        
+        <PaymentSelection 
+          paymentMethod={paymentMethod} 
+          setPaymentMethod={setPaymentMethod} 
+        />
+
+        <div style={{ marginTop: '1rem', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
+          <h3 style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>Total Amount:</span>
+            <span>{formatCurrency(getTotal())}</span>
+          </h3>
+          <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }}>
+            Place Order
+          </button>
         </div>
       </form>
     </div>

@@ -19,7 +19,7 @@ const Cart = () => {
             <p>{formatCurrency(item.product.price)}</p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <button onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>-</button>
+            <button onClick={() => updateQuantity(item.product._id, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
             <span>{item.quantity}</span>
             <button onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>+</button>
             <button onClick={() => removeFromCart(item.product._id)} className="btn-danger">Remove</button>

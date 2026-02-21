@@ -27,7 +27,7 @@ const UserManagement = () => {
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
+            <tr style={{ backgroundColor: '#f4f4f4' }}>
               <th style={{ border: '1px solid #ddd', padding: '8px' }}>Name</th>
               <th style={{ border: '1px solid #ddd', padding: '8px' }}>Email</th>
               <th style={{ border: '1px solid #ddd', padding: '8px' }}>Role</th>

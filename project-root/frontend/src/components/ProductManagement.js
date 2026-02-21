@@ -41,10 +41,14 @@ const ProductManagement = () => {
       }
       fetchProducts();
       setShowForm(false);
-      setFormData({ name: '', description: '', price: '', category: '', stock: '', images: [] });
+      resetForm();
     } catch (error) {
       console.error('Error saving product:', error);
     }
+  };
+
+  const resetForm = () => {
+    setFormData({ name: '', description: '', price: '', category: '', stock: '', images: [] });
   };
 
   const handleDelete = async (id) => {
@@ -64,7 +68,10 @@ const ProductManagement = () => {
   };
 
   const handleAIGenerateDescription = async () => {
-    if (!formData.name || !formData.category) return;
+    if (!formData.name || !formData.category) {
+      alert('Please enter product name and category first.');
+      return;
+    }
     const description = await generateDescription(formData.name, formData.category, []);
     if (description) {
       setFormData({ ...formData, description });
@@ -72,25 +79,31 @@ const ProductManagement = () => {
   };
 
   const handleAIPricing = async () => {
-    if (!formData.name || !formData.category) return;
+    if (!formData.name || !formData.category) {
+      alert('Please enter product name and category first.');
+      return;
+    }
     const suggestion = await getPricingSuggestion(formData.name, formData.category, 'market data');
     if (suggestion) {
       alert(`AI Pricing Suggestion: ${suggestion}`);
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <div className="loading">Loading products...</div>;
 
   return (
     <div className="content">
-      <h2>Product Management</h2>
-      <button onClick={() => setShowForm(!showForm)} className="btn">
-        {showForm ? 'Cancel' : 'Add New Product'}
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Product Management</h2>
+        <button onClick={() => { setShowForm(!showForm); if(showForm) resetForm(); }} className="btn">
+          {showForm ? 'Cancel' : 'Add New Product'}
+        </button>
+      </div>
+
       {showForm && (
-        <form onSubmit={handleSubmit} className="card" style={{ marginTop: '1rem' }}>
+        <form onSubmit={handleSubmit} className="card" style={{ marginTop: '1rem', border: '1px solid #007bff' }}>
           <div className="form-group">
-            <label>Name</label>
+            <label>Product Name</label>
             <input
               type="text"
               value={formData.name}
@@ -98,59 +111,82 @@ const ProductManagement = () => {
               required
             />
           </div>
+          
           <div className="form-group">
             <label>Description</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
+              rows="4"
             />
-            <button type="button" onClick={handleAIGenerateDescription} disabled={aiLoading}>
-              {aiLoading ? 'Generating...' : 'AI Generate Description'}
+            <button 
+              type="button" 
+              onClick={handleAIGenerateDescription} 
+              disabled={aiLoading}
+              style={{ marginTop: '5px', background: '#6f42c1', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              {aiLoading ? 'Magic is happening...' : '✨ AI Generate Description'}
             </button>
           </div>
+
           <div className="form-group">
-            <label>Price</label>
+            <label>Price ($)</label>
             <input
               type="number"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               required
             />
-            <button type="button" onClick={handleAIPricing} disabled={aiLoading}>
-              {aiLoading ? 'Getting...' : 'AI Pricing Suggestion'}
+            <button 
+              type="button" 
+              onClick={handleAIPricing} 
+              disabled={aiLoading}
+              style={{ marginTop: '5px', background: '#28a745', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              💰 AI Pricing Suggestion
             </button>
           </div>
-          <div className="form-group">
-            <label>Category</label>
-            <input
-              type="text"
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              required
-            />
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="form-group">
+              <label>Category</label>
+              <input
+                type="text"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Stock</label>
+              <input
+                type="number"
+                value={formData.stock}
+                onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                required
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label>Stock</label>
-            <input
-              type="number"
-              value={formData.stock}
-              onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-              required
-            />
-          </div>
-          <button type="submit" className="btn">{formData._id ? 'Update' : 'Create'} Product</button>
+
+          <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }}>
+            {formData._id ? 'Update' : 'Create'} Product
+          </button>
         </form>
       )}
-      <div className="grid" style={{ marginTop: '2rem' }}>
+
+      <div className="grid" style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
         {products.map((product) => (
-          <div key={product._id} className="card">
-            <h3>{product.name}</h3>
-            <p>{formatCurrency(product.price)}</p>
-            <p>Stock: {product.stock}</p>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button onClick={() => handleEdit(product)} className="btn">Edit</button>
-              <button onClick={() => handleDelete(product._id)} className="btn-danger">Delete</button>
+          <div key={product._id} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <h3>{product.name}</h3>
+              <p style={{ color: '#007bff', fontWeight: 'bold' }}>{formatCurrency(product.price)}</p>
+              <p>Stock: {product.stock}</p>
+              <p style={{ fontSize: '0.8rem', color: '#666' }}>Category: {product.category}</p>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+              <button onClick={() => handleEdit(product)} className="btn" style={{ flex: 1 }}>Edit</button>
+              <button onClick={() => handleDelete(product._id)} className="btn-danger" style={{ flex: 1 }}>Delete</button>
             </div>
           </div>
         ))}

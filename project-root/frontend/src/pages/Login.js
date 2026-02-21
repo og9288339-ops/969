@@ -20,33 +20,39 @@ const Login = () => {
   };
 
   return (
-    <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Login</h2>
+    <div className="card" style={{ maxWidth: '400px', margin: '2rem auto', padding: '2rem' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Email</label>
+        <div className="form-group" style={{ marginBottom: '1rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email Address</label>
           <input
             type="email"
             name="email"
+            placeholder="Enter your email"
             value={formData.email}
             onChange={handleChange}
             required
+            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </div>
-        <div className="form-group">
-          <label>Password</label>
+        <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Password</label>
           <input
             type="password"
             name="password"
+            placeholder="Enter your password"
             value={formData.password}
             onChange={handleChange}
             required
+            style={{ width: '100%', padding: '0.8rem', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </div>
-        <button type="submit" className="btn" style={{ width: '100%' }}>Login</button>
+        <button type="submit" className="btn" style={{ width: '100%', padding: '0.8rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Login
+        </button>
       </form>
-      <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-        Don't have an account? <Link to="/register">Register</Link>
+      <p style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+        Don't have an account? <Link to="/register" style={{ color: '#007bff', textDecoration: 'none' }}>Register</Link>
       </p>
     </div>
   );

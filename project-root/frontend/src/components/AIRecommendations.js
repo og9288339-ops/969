@@ -17,7 +17,7 @@ const AIRecommendations = ({ userHistory }) => {
     if (userHistory) {
       fetchRecommendations();
     }
-  }, [userHistory]);
+  }, [userHistory, getRecommendations]); // أضفت getRecommendations لضمان استقرار الـ Hook
 
   if (loading) return <div className="loading">Loading AI recommendations...</div>;
 

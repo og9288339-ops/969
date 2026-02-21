@@ -24,30 +24,44 @@ const OrderHistory = () => {
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div>
-      <h1>Order History</h1>
+    <div className="content">
+      <h1 style={{ marginBottom: '2rem' }}>Order History</h1>
       {orders.length > 0 ? (
         <div>
           <div className="card">
-            <h2>Your Orders</h2>
+            <h2 style={{ marginBottom: '1.5rem' }}>Your Orders</h2>
             {orders.map((order) => (
-              <div key={order._id} style={{ borderBottom: '1px solid #ddd', padding: '1rem 0' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div key={order._id} style={{ borderBottom: '1px solid #eee', padding: '1.5rem 0' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                   <div>
-                    <p><strong>Order ID:</strong> {order._id}</p>
-                    <p><strong>Total:</strong> {formatCurrency(order.total)}</p>
-                    <p><strong>Status:</strong> {order.status}</p>
+                    <p><strong>Order ID:</strong> <span style={{ color: '#666' }}>{order._id}</span></p>
+                    <p><strong>Total:</strong> <span style={{ color: '#28a745', fontWeight: 'bold' }}>{formatCurrency(order.total)}</span></p>
+                    <p>
+                      <strong>Status:</strong> 
+                      <span className={`status-${order.status.toLowerCase()}`} style={{ marginLeft: '0.5rem', padding: '0.2rem 0.6rem', borderRadius: '4px', backgroundColor: '#e9ecef', fontSize: '0.9rem' }}>
+                        {order.status}
+                      </span>
+                    </p>
                     <p><strong>Date:</strong> {formatDate(order.createdAt)}</p>
                   </div>
-                  <button onClick={() => setSelectedOrder(order._id)} className="btn">Track Order</button>
+                  <button onClick={() => setSelectedOrder(order._id)} className="btn">
+                    Track Order
+                  </button>
                 </div>
               </div>
             ))}
           </div>
-          {selectedOrder && <OrderTracking orderId={selectedOrder} />}
+          
+          {selectedOrder && (
+            <div style={{ marginTop: '2rem' }}>
+              <OrderTracking orderId={selectedOrder} />
+            </div>
+          )}
         </div>
       ) : (
-        <p>You haven't placed any orders yet.</p>
+        <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
+          <p style={{ fontSize: '1.2rem', color: '#666' }}>You haven't placed any orders yet.</p>
+        </div>
       )}
     </div>
   );

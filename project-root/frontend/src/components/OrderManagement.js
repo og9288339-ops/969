@@ -23,7 +23,7 @@ const OrderManagement = () => {
   const updateOrderStatus = async (id, status) => {
     try {
       await api.put(`/admin/orders/${id}`, { status });
-      fetchOrders();
+      fetchOrders(); // تحديث القائمة بعد التعديل
     } catch (error) {
       console.error('Error updating order:', error);
     }
@@ -37,27 +37,30 @@ const OrderManagement = () => {
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Order ID</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>User</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Total</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Status</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Date</th>
-              <th style={{ border: '1px solid #ddd', padding: '8px' }}>Actions</th>
+            <tr style={{ backgroundColor: '#f4f4f4' }}>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Order ID</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>User</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Total</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Status</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Date</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
+              <tr key={order._id} style={{ textAlign: 'center' }}>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{order._id}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{order.user.name}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{order.user?.name || 'Unknown'}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{formatCurrency(order.total)}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{order.status}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                  <span className={`status-${order.status}`}>{order.status}</span>
+                </td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{formatDate(order.createdAt)}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>
                   <select
                     value={order.status}
                     onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                    style={{ padding: '5px', borderRadius: '4px' }}
                   >
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>

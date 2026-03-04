@@ -1,8 +1,7 @@
 {
   "name": "969",
   "version": "1.0.0",
-  "description": "![AI-Commerce Logo](https://via.placeholder.com/150x50?text=AI-Commerce)",
-  "main": "index.js",
-"scripts": {
-  "start": "node index.js",
-  "dev": "node --watch index.js"
+  "scripts": {
+    "start": "node index.js"
+  }
+}

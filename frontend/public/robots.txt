@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /profile/
+Disallow: /orders/
+Disallow: /cart/
+
+Sitemap: https://www.ai-commerce.com/sitemap.xml
+
+Crawl-delay: 1

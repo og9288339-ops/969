@@ -1,7 +1,9 @@
 {
-  "name": "969",
+  "name": "969-project",
   "version": "1.0.0",
   "scripts": {
-    "start": "node index.js"
+    "install-all": "npm install --legacy-peer-deps && cd frontend && npm install --legacy-peer-deps && cd ../backend && npm install",
+    "build-frontend": "cd frontend && npm run build",
+    "start-backend": "cd backend && npm start"
   }
 }

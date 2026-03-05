@@ -8,17 +8,14 @@
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
+      "config": { 
+        "distDir": "build",
+        "installCommand": "npm install --legacy-peer-deps"
+      }
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "backend/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "frontend/$1"
-    }
+    { "source": "/api/(.*)", "destination": "backend/server.js" },
+    { "source": "/(.*)", "destination": "frontend/$1" }
   ]
 }

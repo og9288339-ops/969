@@ -2,7 +2,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
@@ -29,18 +28,8 @@ app.use(xss());
 app.use(hpp());
 app.use(helmet());
 
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
-
 app.use(cors({
-  origin: [
-    'https://969-nine.vercel.app', 
-    'https://969-pg2u-elj3shzhj-969s-projects.vercel.app',
-    'http://localhost:3000'
-  ],
+  origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -54,15 +43,11 @@ app.use('/api/ai', ai);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+// Vercel Serverless Export
+module.exports = app;
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-});
-
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`);
-  server.close(() => {
-    process.exit(1);
-  });
-});
+// Local testing only
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}

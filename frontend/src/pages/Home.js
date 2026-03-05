@@ -13,11 +13,14 @@ const Home = () => {
     const fetchFeaturedProducts = async () => {
       try {
         const res = await api.get('/products?page=1&limit=8');
-        setFeaturedProducts(res.data.data);
+        if (res.data && res.data.data) {
+          setFeaturedProducts(res.data.data);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchFeaturedProducts();
   }, []);
@@ -30,14 +33,20 @@ const Home = () => {
         <h1>Welcome to AI-Commerce</h1>
         <p>Discover amazing products with AI-powered recommendations</p>
       </section>
+
       <section>
         <h2>Featured Products</h2>
         <div className="grid">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          {featuredProducts && featuredProducts.length > 0 ? (
+            featuredProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          ) : (
+            <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>No products found.</p>
+          )}
         </div>
       </section>
+
       {user && (
         <section style={{ marginTop: '2rem' }}>
           <AIRecommendations userHistory={[]} />

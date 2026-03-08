@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "install": "npm install --legacy-peer-deps",
-    "build": "cd frontend && npm install --legacy-peer-deps && npm run build",
+    "vercel-build": "cd frontend && npm install --legacy-peer-deps && npm run build",
     "start": "cd backend && npm start"
   }
 }

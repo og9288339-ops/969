@@ -1,7 +1,8 @@
 {
   "name": "969-project",
   "version": "1.0.0",
- "scripts": {
-  "build": "cd frontend && npm install --legacy-peer-deps && npm run build",
-  "install": "npm install --legacy-peer-deps"
+  "scripts": {
+    "build": "cd frontend && npm install --legacy-peer-deps && npm run build",
+    "install": "npm install --legacy-peer-deps"
+  }
 }

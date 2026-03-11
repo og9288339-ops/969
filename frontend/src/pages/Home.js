@@ -1,58 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import api from '../utils/api';
-import ProductCard from '../components/ProductCard';
-import AIRecommendations from '../components/AIRecommendations';
-import { useAuth } from '../hooks/useAuth';
+import React from 'react';
+import ProductCard from './ProductCard';
+import AIRecommendations from './AIRecommendations';
 
 const Home = () => {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
-
-  useEffect(() => {
-    const fetchFeaturedProducts = async () => {
-      try {
-        const res = await api.get('/products?page=1&limit=8');
-        if (res.data && res.data.data) {
-          setFeaturedProducts(res.data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFeaturedProducts();
-  }, []);
-
-  if (loading) return <div className="loading">Loading...</div>;
+  // Mock data for the product grid
+  const featuredProducts = [
+    { id: 1, name: "AI Smart Watch", price: 299.99, image: "https://via.placeholder.com/300" },
+    { id: 2, name: "Neural Headphones", price: 149.50, image: "https://via.placeholder.com/300" },
+    { id: 3, name: "Robotic Vacuum", price: 450.00, image: "https://via.placeholder.com/300" },
+    { id: 4, name: "Smart Home Hub", price: 89.99, image: "https://via.placeholder.com/300" },
+  ];
 
   return (
-    <div>
-      <section style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1>Welcome to AI-Commerce</h1>
-        <p>Discover amazing products with AI-powered recommendations</p>
-      </section>
-
-      <section>
-        <h2>Featured Products</h2>
-        <div className="grid">
-          {featuredProducts && featuredProducts.length > 0 ? (
-            featuredProducts.map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))
-          ) : (
-            <p style={{ textAlign: 'center', gridColumn: '1/-1' }}>No products found.</p>
-          )}
+    <main className="home-container">
+      
+      {/* 1. Hero Section */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>The Future of Shopping is Here</h1>
+          <p>Experience personalized AI-driven shopping. Discover products tailored specifically to your style and needs.</p>
+          <button className="cta-button primary">Start Shopping</button>
         </div>
       </section>
 
-      {user && (
-        <section style={{ marginTop: '2rem' }}>
-          <AIRecommendations userHistory={[]} />
-        </section>
-      )}
-    </div>
+      {/* 2. Features Section */}
+      <section className="features-section">
+        <div className="container">
+          <h2>Why Choose Us?</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="icon">🧠</div>
+              <h3>AI Product Recommendations</h3>
+              <p>Our algorithms learn your preferences to show you exactly what you want.</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon">📊</div>
+              <h3>Smart Analytics</h3>
+              <p>Real-time insights into market trends and inventory management.</p>
+            </div>
+            <div className="feature-card">
+              <div className="icon">🔒</div>
+              <h3>Secure Payments</h3>
+              <p>Bank-grade encryption ensures your transactions are always safe.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Products Preview */}
+      <section className="products-section">
+        <div className="container">
+          <h2>Featured Products</h2>
+          <div className="product-grid">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. AI Recommendation Section */}
+      <section className="ai-section">
+        <div className="container">
+          <h2>Personalized for You</h2>
+          <p>Based on your recent browsing history, we think you'll love these.</p>
+          <AIRecommendations />
+        </div>
+      </section>
+
+      {/* 5. Call To Action Section */}
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to upgrade your store?</h2>
+          <p>Join thousands of merchants using our AI platform today.</p>
+          <button className="cta-button secondary">Register Now</button>
+        </div>
+      </section>
+
+    </main>
   );
 };
 

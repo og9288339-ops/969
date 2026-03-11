@@ -1,62 +1,173 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
-import { FaShoppingCart, FaUser, FaSignOutAlt } from 'react-icons/fa';
+import './Header.css';
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { getItemCount } = useCart();
+  const { cartItems } = useCart();
   const navigate = useNavigate();
+
+  const cartCount = cartItems.length;
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login');
+    setIsProfileOpen(false);
   };
 
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Products', path: '/products' },
+    { name: 'Orders', path: '/orders' },
+    { name: 'Analytics', path: '/analytics' },
+  ];
+
   return (
-    <header style={{ background: '#fff', padding: '1rem', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto' }}>
-        <Link to="/" style={{ fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none', color: '#333' }}>
-          AI-Commerce
+    <header className="header">
+      <div className="header-container">
+        {/* Logo */}
+        <Link to="/" className="logo" onClick={() => setIsMenuOpen(false)}>
+          <span className="logo-icon">🤖</span>
+          <span className="logo-text">969 AI Store</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link to="/products" style={{ textDecoration: 'none', color: '#333' }}>Products</Link>
-          <Link to="/cart" style={{ position: 'relative', textDecoration: 'none', color: '#333' }}>
-            <FaShoppingCart size={20} />
-            {getItemCount() > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '-10px',
-                right: '-10px',
-                background: '#007bff',
-                color: 'white',
-                borderRadius: '50%',
-                padding: '2px 6px',
-                fontSize: '0.8rem'
-              }}>
-                {getItemCount()}
-              </span>
+
+        {/* Desktop Navigation */}
+        <nav className="nav-desktop">
+          <ul className="nav-links">
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <Link to={link.path} className="nav-link">
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Right Side Actions */}
+        <div className="header-actions">
+          {/* Cart Icon */}
+          <Link to="/cart" className="cart-icon" onClick={() => setIsMenuOpen(false)}>
+            <span className="cart-icon-svg">🛒</span>
+            {cartCount > 0 && (
+              <span className="cart-badge">{cartCount}</span>
             )}
           </Link>
-          {user ? (
-            <>
-              <Link to="/profile" style={{ textDecoration: 'none', color: '#333' }}>
-                <FaUser size={20} />
+
+          {/* Auth Buttons or Profile */}
+          {!user ? (
+            <div className="auth-buttons">
+              <Link to="/login" className="btn btn-secondary">
+                Login
               </Link>
-              {user.role === 'admin' && <Link to="/admin" style={{ textDecoration: 'none', color: '#333' }}>Admin</Link>}
-              <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#333' }}>
-                <FaSignOutAlt size={20} />
-              </button>
-            </>
+              <Link to="/register" className="btn btn-primary">
+                Register
+              </Link>
+            </div>
           ) : (
-            <>
-              <Link to="/login" style={{ textDecoration: 'none', color: '#333' }}>Login</Link>
-              <Link to="/register" style={{ textDecoration: 'none', color: '#333' }}>Register</Link>
-            </>
+            <div className="profile-container">
+              <button 
+                className="profile-btn" 
+                onClick={toggleProfile}
+                aria-label="User profile"
+              >
+                <span className="profile-avatar">
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </span>
+              </button>
+
+              {isProfileOpen && (
+                <div className="profile-dropdown">
+                  <div className="profile-dropdown-header">
+                    <span className="profile-name">{user?.name}</span>
+                    <span className="profile-email">{user?.email}</span>
+                  </div>
+                  <Link to="/profile" className="dropdown-item">
+                    My Profile
+                  </Link>
+                  <Link to="/orders" className="dropdown-item">
+                    My Orders
+                  </Link>
+                  <Link to="/settings" className="dropdown-item">
+                    Settings
+                  </Link>
+                  <div className="dropdown-divider"></div>
+                  <button onClick={handleLogout} className="dropdown-item logout">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           )}
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-btn" 
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger ${isMenuOpen ? 'open' : ''}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
         </div>
-      </nav>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className={`mobile-nav ${isMenuOpen ? 'open' : ''}`}>
+        <nav className="mobile-nav-content">
+          <ul className="mobile-nav-links">
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <Link 
+                  to={link.path} 
+                  className="mobile-nav-link"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          
+          {/* Mobile Auth Section */}
+          <div className="mobile-auth-section">
+            {!user ? (
+              <>
+                <Link to="/login" className="btn btn-secondary btn-block">
+                  Login
+                </Link>
+                <Link to="/register" className="btn btn-primary btn-block">
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/profile" className="btn btn-secondary btn-block">
+                  My Profile
+                </Link>
+                <button onClick={handleLogout} className="btn btn-danger btn-block">
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+        </nav>
+      </div>
     </header>
   );
 };

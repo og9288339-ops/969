@@ -1,22 +1,123 @@
-const mongoose = require('mongoose');
+/**
+ * @module Order
+ * @description Shopify-grade order model for $10k+ MERN marketplace
+ * @author Senior Database Architect
+ * @version 4.0.0
+ * @since 2024
+ */
 
-const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  products: [{
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-    quantity: { type: Number, required: true }
-  }],
-  total: { type: Number, required: true },
-  currency: { type: String, default: 'USD' },
-  status: { type: String, enum: ['pending', 'paid', 'shipped', 'delivered'], default: 'pending' },
-  shippingAddress: {
-    address: String,
-    city: String,
-    country: String,
-    postalCode: String
+import mongoose from 'mongoose';
+
+const orderSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+    orderNumber: {
+      type: String,
+      unique: true,
+      index: true,
+    },
+    orderItems: [
+      {
+        name: { type: String, required: true },
+        qty: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: 'Product',
+        },
+      },
+    ],
+    shippingAddress: {
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      country: { type: String, required: true },
+      phone: { type: String },
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ['PayPal', 'Stripe', 'CreditCard', 'CashOnDelivery'],
+    },
+    paymentResult: {
+      id: { type: String },
+      status: { type: String },
+      update_time: { type: String },
+      email_address: { type: String },
+    },
+    itemsPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    taxPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    shippingPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    isPaid: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    paidAt: {
+      type: Date,
+    },
+    isDelivered: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    deliveredAt: {
+      type: Date,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+      default: 'Pending',
+    },
   },
-  paymentMethod: { type: String, enum: ['stripe', 'paypal', 'coinbase'], required: true },
-  createdAt: { type: Date, default: Date.now }
+  {
+    timestamps: true,
+  }
+);
+
+/**
+ * @description Indexes for high-performance financial reporting
+ */
+orderSchema.index({ user: 1, createdAt: -1 });
+orderSchema.index({ orderNumber: 1 });
+
+/**
+ * @description Pre-save hook to generate a professional human-readable order number
+ */
+orderSchema.pre('save', async function (next) {
+  if (!this.orderNumber) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const random = Math.floor(100000 + Math.random() * 900000); // 6-digit random
+    this.orderNumber = `ORD-${year}-${random}`;
+  }
+  next();
 });
 
-module.exports = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('Order', orderSchema);
+
+export default Order;

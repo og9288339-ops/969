@@ -1,21 +1,46 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import AdminDashboard from '../components/AdminDashboard';
-import UserManagement from '../components/UserManagement';
-import ProductManagement from '../components/ProductManagement';
-import OrderManagement from '../components/OrderManagement';
-import SalesAnalytics from '../components/SalesAnalytics';
+/**
+ * @module AdminPanel
+ * @description World-class admin dashboard layout for luxury e-commerce
+ * @author Senior UI/UX Architect
+ * @version 3.0.0
+ * @since 2024
+ */
 
-const AdminPanel = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<AdminDashboard />} />
-      <Route path="/users" element={<UserManagement />} />
-      <Route path="/products" element={<ProductManagement />} />
-      <Route path="/orders" element={<OrderManagement />} />
-      <Route path="/analytics" element={<SalesAnalytics />} />
-    </Routes>
-  );
-};
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  // Sidebar Icons
+  LayoutDashboard, 
+  Package, 
+  ShoppingCart, 
+  Users, 
+  Brain, 
+  Settings,
+  // Top Nav Icons
+  Menu, 
+  X,
+  Search, 
+  Bell, 
+  UserCircle, 
+  ChevronDown,
+  // Stats Icons
+  DollarSign,
+  PackageCheck,
+  Shield,
+  Zap,
+  TrendingUp
+} from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import SalesAnalytics from './SalesAnalytics';
+import OrderManagement from './OrderManagement';
+import UserManagement from './UserManagement';
+import './AdminPanel.css';
 
-export default AdminPanel;
+/**
+ * Page configuration with icons and components
+ */
+const PAGES = [
+  { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, component: SalesAnalytics },
+  { id: 'products', name: 'Products', icon: Package, component: () => <div>Products Management</div> },
+  { id: 'orders', name: 'Orders', icon: ShoppingCart, component: OrderManagement },
+  { id: 'users

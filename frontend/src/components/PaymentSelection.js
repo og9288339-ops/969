@@ -1,40 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  CreditCard, 
+  Paypal, 
+  Bitcoin, 
+  Ethereum, 
+  CheckCircle,
+  Shield,
+  Lock,
+  Zap,
+  ArrowRight,
+  Loader2
+} from 'lucide-react';
+import './PaymentSelection.css';
 
-const PaymentSelection = ({ paymentMethod, setPaymentMethod }) => {
-  return (
-    <div className="form-group">
-      <label>Payment Method</label>
-      <div style={{ display: 'flex', gap: '1rem' }}>
-        <label>
-          <input
-            type="radio"
-            value="stripe"
-            checked={paymentMethod === 'stripe'}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
-          Stripe
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="paypal"
-            checked={paymentMethod === 'paypal'}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
-          PayPal
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="coinbase"
-            checked={paymentMethod === 'coinbase'}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-          />
-          Coinbase
-        </label>
-      </div>
-    </div>
-  );
-};
-
-export default PaymentSelection;
+const PaymentSelection

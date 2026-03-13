@@ -1,58 +1,89 @@
-const stripe = require('../config/stripe');
-const paypal = require('paypal-rest-sdk');
-const CoinbaseCommerce = require('coinbase-commerce-node').Client;
-const client = CoinbaseCommerce(process.env.COINBASE_API_KEY);
+/**
+ * @module paymentController
+ * @description High-security payment controller for $10k+ MERN marketplace
+ * @author Principal Backend Architect
+ * @version 5.0.0
+ * @since 2024
+ */
 
-paypal.configure({
-  mode: 'sandbox', // or 'live'
-  client_id: process.env.PAYPAL_CLIENT_ID,
-  client_secret: process.env.PAYPAL_CLIENT_SECRET
+import Stripe from 'stripe';
+import { catchAsync } from '../utils/catchAsync.js';
+import Order from '../models/Order.js';
+import AppError from '../utils/appError.js';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+/**
+ * @description Create Stripe Payment Intent with Server-Side Price Verification
+ * Prevents price tampering by fetching total from DB via orderId
+ */
+export const createPaymentIntent = catchAsync(async (req, res, next) => {
+  const { orderId } = req.body;
+
+  const order = await Order.findById(orderId);
+  if (!order) {
+    return next(new AppError('No order found with that ID', 404));
+  }
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Math.round(order.totalPrice * 100), // Convert to Cents
+    currency: 'usd',
+    metadata: { 
+      orderId: order._id.toString(),
+      userId: req.user._id.toString() 
+    },
+    automatic_payment_methods: { enabled: true },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    clientSecret: paymentIntent.client_secret,
+  });
 });
 
-exports.stripePayment = async (req, res) => {
-  const { amount, currency } = req.body;
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100,
-      currency,
-    });
-    res.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+/**
+ * @description High-Security Webhook to confirm payment from Stripe directly
+ * Uses Signature Verification to ensure request authenticity
+ */
+export const stripeWebhook = catchAsync(async (req, res, next) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
 
-exports.paypalPayment = (req, res) => {
-  const { amount, currency } = req.body;
-  const create_payment_json = {
-    intent: 'sale',
-    payer: { payment_method: 'paypal' },
-    redirect_urls: {
-      return_url: 'http://localhost:3000/success',
-      cancel_url: 'http://localhost:3000/cancel'
-    },
-    transactions: [{
-      amount: { total: amount, currency },
-      description: 'Ecommerce purchase'
-    }]
-  };
-  paypal.payment.create(create_payment_json, (error, payment) => {
-    if (error) res.status(500).json({ message: error.message });
-    else res.json({ approval_url: payment.links[1].href });
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'payment_intent.succeeded') {
+    const session = event.data.object;
+    const orderId = session.metadata.orderId;
+
+    const order = await Order.findById(orderId);
+    if (order) {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      order.paymentResult = {
+        id: session.id,
+        status: session.status,
+        email_address: session.receipt_email || req.user?.email,
+      };
+      await order.save();
+    }
+  }
+
+  res.status(200).json({ received: true });
+});
+
+/**
+ * @description Get Stripe Publishable Key for Frontend
+ */
+export const getStripeConfig = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
   });
-};
-
-exports.coinbasePayment = async (req, res) => {
-  const { amount, currency } = req.body;
-  try {
-    const charge = await client.createCharge({
-      name: 'Ecommerce Purchase',
-      description: 'Payment for products',
-      local_price: { amount, currency },
-      pricing_type: 'fixed_price'
-    });
-    res.json({ hosted_url: charge.hosted_url });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+});

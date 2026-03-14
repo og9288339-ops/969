@@ -1,1 +1,105 @@
+# ========================================
+# .gitkeep - ENTERPRISE MERN MARKETPLACE
+# ========================================
+# Project: $10,000+ Luxury E-Commerce Platform
+# Directory: src/assets/images/
+# File Purpose: Preserve image directory structure in Git repository
+# Author: Senior DevOps Engineer
+# Version: 1.1.0
+# ========================================
 
+# Git ignores empty directories. This file ensures src/assets/images/ exists
+# in the repository even before adding production-optimized images.
+
+# ========================================
+# ASSET MANAGEMENT GUIDELINES 🎨
+# ========================================
+# 📁 Recommended Folder Structure:
+# src/assets/images/
+# ├── products/           # Product photos (WebP 1200x1200 max)
+# │   ├── luxury-watch.webp
+# │   └── designer-bag.avif
+# ├── banners/            # Hero banners (1920x600 WebP)
+# │   └── homepage-promo.webp
+# ├── placeholders/       # Fallback images (SVG preferred)
+# │   ├── product-placeholder.svg
+# │   └── empty-cart.svg
+# ├── categories/         # Category icons (SVG)
+# │   └── electronics.svg
+# └── avatars/            # User profile images (300x300 WebP)
+
+# ========================================
+# FILE FORMAT & OPTIMIZATION 📏
+# ========================================
+# ✅ RECOMMENDED (Production):
+# - 🖼️ WebP (Primary - 70% smaller than PNG)
+# - 🖼️ AVIF (Next-gen - 50% smaller than WebP)
+# - 🔤 SVG (Icons/Logos - scalable, no quality loss)
+# 
+# ❌ AVOID (Bloated):
+# - 📸 JPEG (lossy, artifacts)
+# - 🖼️ PNG (large file sizes)
+# - ❌ PSD/AI source files
+
+# 📦 NAMING CONVENTIONS:
+# - kebab-case-product-name.webp
+# - banner-homepage-promo-1920x600.webp
+# - icon-category-electronics.svg
+# - Max 100KB per image (compress first!)
+
+# ========================================
+# OPTIMIZATION WORKFLOW 🛠️
+# ========================================
+# Before committing, ALWAYS run through:
+# 1. 💎 TinyPNG.com (Free - 5MB limit)
+# 2. ⚡ ImgOptim.app (Mac - Free)
+# 3. 🌐 Squoosh.app (Web - Google)
+# 4. 📱 ImageOptim (CLI - Batch processing)
+
+# Target: <50KB for product images, <200KB for banners
+
+# ========================================
+# RESPONSIVE STRATEGY 📱
+# ========================================
+# Generate multiple sizes:
+# products/
+# ├── watch-1200.webp     (Desktop)
+# ├── watch-600.webp      (Tablet)
+# ├── watch-300.webp      (Mobile)
+# └── watch-100.webp      (Thumbnail)
+
+# CSS Usage Example:
+# ```
+# picture {
+#   img[data-size="desktop"] { display: block; }
+#   @media (max-width: 768px) {
+#     img[data-size="tablet"] { display: block; }
+#   }
+# ```
+
+# ========================================
+# CLOUDINARY INTEGRATION (Production) ☁️
+# ========================================
+# In production, upload to Cloudinary and reference URLs:
+# https://res.cloudinary.com/demo/image/upload/v1234567890/products/watch.webp
+
+# ========================================
+# DEVELOPER CHECKLIST ✅
+# ========================================
+# [ ] Images < 100KB (compress first)
+# [ ] WebP/AVIF/SVG formats only
+# [ ] Kebab-case naming
+# [ ] Responsive sizes generated
+# [ ] No source files (PSD/AI)
+# [ ] Alt text ready in components
+# [ ] Lazy loading implemented
+
+# ========================================
+# PERFORMANCE TARGETS 🎯
+# ========================================
+# 🏆 Lighthouse Score Goal: 100/100 Performance
+# 📊 Largest Contentful Paint: <1.5s
+# 📱 Cumulative Layout Shift: 0.0
+# 🚀 Bundle Impact: <50KB total images
+
+# This .gitkeep ensures your luxury marketplace loads like lightning! ⚡

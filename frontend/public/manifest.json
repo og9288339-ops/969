@@ -1,48 +1,68 @@
 {
-  "name": "AI-Commerce - Premium AI-Powered E-Commerce Platform",
-  "short_name": "AI-Commerce",
-  "description": "A cutting-edge, commercial e-commerce platform leveraging AI to assist sellers with pricing suggestions, product optimization, and personalized recommendations. Built for global scalability with multi-currency support, advanced analytics, and seamless payment integrations.",
+  "$schema": "https://json.schemastore.org/web-manifest.json",
+  "name": "Elite Assets | Luxury Investment Portal",
+  "short_name": "LuxAssets",
+  "description": "Premier enterprise platform for luxury asset acquisition and investment. Discover exclusive opportunities with AI-powered recommendations and blockchain-secured transactions.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#d4af37",
   "scope": "/",
-  "lang": "en-US",
-  "categories": ["shopping", "business", "productivity"],
+  "categories": ["business", "finance", "shopping"],
   "icons": [
     {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.jpg",
+      "sizes": "1920x1080",
+      "type": "image/jpg",
+      "form_factor": "wide",
+      "label": "Luxury Asset Dashboard"
+    },
+    {
+      "src": "/screenshots/mobile-home.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpg",
+      "form_factor": "narrow",
+      "label": "Mobile Acquisition Interface"
     }
   ],
   "shortcuts": [
     {
-      "name": "View Products",
-      "short_name": "Products",
-      "description": "Browse our AI-optimized product catalog",
-      "url": "/products",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "name": "My Collection",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icons/shortcut-vault.png", "sizes": "96x96" }]
     },
     {
-      "name": "Shopping Cart",
-      "short_name": "Cart",
-      "description": "View and manage your shopping cart",
-      "url": "/cart",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "name": "Marketplace",
+      "url": "/shop",
+      "icons": [{ "src": "/icons/shortcut-shop.png", "sizes": "96x96" }]
     }
-  ],
-  "permissions": [
-    "notifications",
-    "background-sync"
   ],
   "related_applications": [],
   "prefer_related_applications": false

@@ -1,1 +1,39 @@
+# ========================================
+# .gitkeep - ENTERPRISE MERN MARKETPLACE
+# ========================================
+# Project: $10,000+ Luxury E-Commerce Platform
+# File Purpose: Preserve src/assets/fonts/ directory structure in Git
+# Author: Senior DevOps & Frontend Engineer
+# Version: 1.0.0
+# ========================================
 
+# This file ensures the fonts directory exists in the Git repository
+# even when empty. Git ignores empty directories by default.
+
+# ========================================
+# DEVELOPER INSTRUCTIONS
+# ========================================
+# 📁 Place custom fonts here:
+# src/assets/fonts/
+#    ├── brand-luxury.woff2
+#    ├── inter-regular.woff2
+#    ├── inter-bold.woff2
+#    └── custom-icons.ttf
+
+# 🎨 Recommended Font Formats (Modern Web):
+# - .woff2 (Primary - Best compression for $10k+ sites)
+# - .woff  (Fallback for older browsers)
+# - .ttf/.otf (Avoid - larger files)
+
+# 🔧 CSS Usage Example:
+# @font-face {
+#    font-family: 'Luxury Brand';
+#    src: url('/src/assets/fonts/brand-luxury.woff2') format('woff2');
+#    font-weight: 400;
+#    font-style: normal;
+#    font-display: swap;
+# }
+
+# ========================================
+# Keep this file until at least one font is added.
+# ========================================

@@ -1,30 +1,130 @@
-const crypto = require('crypto');
+/**
+ * @module helpers
+ * @description Enterprise Utility Library ($10k+ Architecture)
+ * @author Senior Backend Architect
+ * @version 4.0.0
+ * @since 2026
+ */
 
-const generateRandomString = (length = 32) => {
-  return crypto.randomBytes(length).toString('hex');
-};
+import crypto from 'crypto';
 
-const formatCurrency = (amount, currency = 'USD') => {
-  return new Intl.NumberFormat('en-US', {
+/**
+ * @section Financial & Formatting Utilities
+ */
+
+export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency,
+    currency: currency,
   }).format(amount);
 };
 
-const calculateTotal = (items) => {
-  return items.reduce((total, item) => total + item.price * item.quantity, 0);
+export const calculateDiscount = (originalPrice, salePrice) => {
+  if (!originalPrice || originalPrice <= 0) return 0;
+  const discount = ((originalPrice - salePrice) / originalPrice) * 100;
+  return Math.round(discount);
 };
 
-const paginate = (page, limit) => {
-  const currentPage = parseInt(page, 10) || 1;
-  const currentLimit = parseInt(limit, 10) || 10;
-  const skip = (currentPage - 1) * currentLimit;
-  return { skip, limit: currentLimit };
+/**
+ * @section Security & Cryptography
+ */
+
+export const generateSecureCode = (length = 6) => {
+  return crypto.randomBytes(Math.ceil(length / 2))
+    .toString('hex')
+    .slice(0, length)
+    .toUpperCase();
 };
 
-module.exports = {
-  generateRandomString,
+export const hashData = (data) => {
+  return crypto.createHash('sha256').update(data).digest('hex');
+};
+
+/**
+ * @section SEO & String Manipulation
+ */
+
+export const slugify = (text) => {
+  const slug = text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') 
+    .replace(/[^\w\u0621-\u064A-]+/g, '') 
+    .replace(/--+/g, '-');
+    
+  return slug || 'product-' + Date.now();
+};
+
+export const truncateText = (text, limit = 100) => {
+  if (!text) return "";
+  if (text.length <= limit) return text;
+  return text.slice(0, limit).trim() + '...';
+};
+
+/**
+ * @section Logistics & Time Intelligence
+ */
+
+export const calculateDeliveryDate = (daysToAdd) => {
+  let date = new Date();
+  let addedDays = 0;
+  while (addedDays < daysToAdd) {
+    date.setDate(date.getDate() + 1);
+    // Skip Fridays and Saturdays (Customized for Egypt/MENA region)
+    if (date.getDay() !== 5 && date.getDay() !== 6) {
+      addedDays++;
+    }
+  }
+  return date;
+};
+
+export const getRelativeTime = (date) => {
+  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const divisions = [
+    { amount: 60, name: 'seconds' },
+    { amount: 60, name: 'minutes' },
+    { amount: 24, name: 'hours' },
+    { amount: 7, name: 'days' },
+    { amount: 4.345, name: 'weeks' },
+    { amount: 12, name: 'months' },
+    { amount: Number.POSITIVE_INFINITY, name: 'years' }
+  ];
+
+  let duration = (new Date(date) - new Date()) / 1000;
+  for (let i = 0; i <= divisions.length; i++) {
+    const division = divisions[i];
+    if (Math.abs(duration) < division.amount) {
+      return formatter.format(Math.round(duration), division.name);
+    }
+    duration /= division.amount;
+  }
+};
+
+/**
+ * @section Data Structures & Pagination
+ */
+
+export const paginate = (items, page = 1, limit = 10) => {
+  const offset = (page - 1) * limit;
+  return items.slice(offset, offset + limit);
+};
+
+export const cleanObject = (obj) => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, v]) => v != null && v !== "")
+  );
+};
+
+export default {
   formatCurrency,
-  calculateTotal,
+  calculateDiscount,
+  generateSecureCode,
+  hashData,
+  slugify,
+  truncateText,
+  calculateDeliveryDate,
+  getRelativeTime,
   paginate,
+  cleanObject
 };

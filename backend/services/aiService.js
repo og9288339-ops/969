@@ -1,85 +1,117 @@
-const { Configuration, OpenAIApi } = require('openai');
+/**
+ * @module aiService
+ * @description Centralized Intelligence Hub ($10k+ Architecture)
+ * @author Lead AI Architect
+ * @version 3.5.0
+ * @since 2024
+ */
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+import { OpenAI } from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
 
-class AIService {
-  async generateProductDescription(productName, category, features) {
-    try {
-      const prompt = `Generate a compelling, SEO-optimized product description for a ${productName} in the ${category} category. Key features: ${features.join(', ')}. Make it engaging and persuasive.`;
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt,
-        max_tokens: 300,
-        temperature: 0.7,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      throw new Error('AI description generation failed');
-    }
+dotenv.config();
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+/**
+ * @description Generates personalized product recommendations using User History
+ */
+export const getProductRecommendations = async (userHistory, availableProducts) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `
+      As an expert shopping assistant, analyze this User History: ${JSON.stringify(userHistory)}.
+      From the following catalog: ${JSON.stringify(availableProducts)}, 
+      select the top 5 products that match the user's taste.
+      Return strictly a JSON array of product objects.
+    `;
+
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
+    return JSON.parse(text.replace(/```json|```/g, ""));
+  } catch (error) {
+    console.error("AI Recommendation Engine Error:", error);
+    return availableProducts.slice(0, 5); 
   }
+};
 
-  async getPricingSuggestion(productName, category, marketData) {
-    try {
-      const prompt = `Suggest a competitive price range for ${productName} in ${category}. Market data: ${marketData}. Provide reasoning and optimal price.`;
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt,
-        max_tokens: 150,
-        temperature: 0.5,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      throw new Error('AI pricing suggestion failed');
-    }
+/**
+ * @description Context-aware chatbot for real-time customer support
+ */
+export const getChatResponse = async (message, context) => {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        { role: "system", content: "You are a luxury marketplace assistant. Use user history to personalize responses." },
+        { role: "assistant", content: `User Context: ${JSON.stringify(context)}` },
+        { role: "user", content: message }
+      ],
+      temperature: 0.6,
+      stream: true,
+    });
+    return response;
+  } catch (error) {
+    throw new Error("AI Chat Assistant Service Unavailable");
   }
+};
 
-  async predictSales(productData, historicalSales) {
-    try {
-      const prompt = `Predict sales for the next month based on product data: ${JSON.stringify(productData)} and historical sales: ${historicalSales}. Provide a numerical estimate and factors.`;
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt,
-        max_tokens: 200,
-        temperature: 0.3,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      throw new Error('AI sales prediction failed');
-    }
+/**
+ * @description Automated SEO Copywriting for Sellers
+ */
+export const generateProductCopy = async (title, specs) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const prompt = `Write a high-converting, SEO-optimized product description for '${title}' based on these specs: ${specs}. Include meta tags and keywords.`;
+    
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  } catch (error) {
+    return "Description generation currently unavailable. Please enter manually.";
   }
+};
 
-  async getRecommendations(userHistory, currentProducts) {
-    try {
-      const prompt = `Based on user history: ${userHistory}, recommend products from: ${currentProducts}. Suggest 5 items with reasons.`;
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt,
-        max_tokens: 250,
-        temperature: 0.8,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      throw new Error('AI recommendations failed');
-    }
+/**
+ * @description Market Sentiment Analysis & Review Summarization
+ */
+export const summarizeReviews = async (reviews) => {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "Analyze customer sentiment. Identify top 3 Pros and Cons." },
+        { role: "user", content: `Analyze these reviews: ${JSON.stringify(reviews)}` }
+      ]
+    });
+    return response.choices[0].message.content;
+  } catch (error) {
+    return "Sentiment analysis failed.";
   }
+};
 
-  async generateAnalyticsInsights(data) {
-    try {
-      const prompt = `Analyze this sales data: ${JSON.stringify(data)}. Provide key insights, trends, and recommendations for improvement.`;
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt,
-        max_tokens: 300,
-        temperature: 0.6,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      throw new Error('AI analytics insights failed');
-    }
+/**
+ * @description Computer Vision for Visual Search
+ */
+export const processVisualSearch = async (imageBuffer) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const result = await model.generateContent([
+      "Identify the fashion items and tech products in this image. Provide category names.",
+      { inlineData: { data: imageBuffer.toString("base64"), mimeType: "image/jpeg" } }
+    ]);
+    return result.response.text();
+  } catch (error) {
+    console.error("Visual Search Error:", error);
+    return null;
   }
-}
+};
 
-module.exports = new AIService();
+export default {
+  getProductRecommendations,
+  getChatResponse,
+  generateProductCopy,
+  summarizeReviews,
+  processVisualSearch
+};

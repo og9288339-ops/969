@@ -1,1 +1,250 @@
+# ========================================
+# GLOBAL IGNORES (Always)
+# ========================================
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.log
+.env*.local
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ========================================
+# ENVIRONMENT & SECRETS (CRITICAL SECURITY)
+# ========================================
+# Environment variables - NEVER commit
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# API Keys & Secrets
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+keystore
+
+# ========================================
+# DEPENDENCIES & PACKAGE MANAGERS
+# ========================================
+# NPM
+node_modules/
+npm-debug.log
+npm-error.log
+
+# Yarn
+.yarn/
+.pnp.*
+.yarnrc.yml
+
+# pnpm
+pnpm-lock.yaml
+node_modules/.pnpm
+
+# Bun
+bun.lockb
+
+# ========================================
+# BUILD & OUTPUT DIRECTORIES
+# ========================================
+dist/
+build/
+coverage/
+.nyc_output/
+*.tgz
+*.tar.gz
+
+# ========================================
+# DATABASE & LOCAL STORAGE
+# ========================================
+data/
+db/
+*.sqlite
+*.sqlite3
+*.db
+
+# ========================================
+# UPLOADS & TEMPORARY FILES
+# ========================================
+# Product images (use Cloudinary in production)
+uploads/
+public/uploads/
+temp/
+.tmp/
+
+# ========================================
+# LOGGING & MONITORING
+# ========================================
+logs/
+*.log
+log/
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ========================================
+# TESTING
+# ========================================
+jest.config.js
+.nyc_output
+coverage/
+tests/
+__tests__/
+test-results/
+
+# ========================================
+# IDE & EDITOR CONFIGS
+# ========================================
+# VS Code
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Vim
+*.swp
+*.swo
+
+# ========================================
+# MAC OS
+# ========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# ========================================
+# WINDOWS
+# ========================================
+Thumbs.db
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ========================================
+# PRODUCTION DEPLOYMENT
+# ========================================
+# Vercel
 .vercel
+
+# Netlify
+.netlify/
+
+# Docker
+Dockerfile.local
+.dockerignore.local
+
+# ========================================
+# MISC
+# ========================================
+# Temporary files
+*.tmp
+*.temp
+.nyc_output
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# ===========================
+# $10K+ ENTERPRISE MARKETPLACE
+# ===========================
+# Custom uploads folder (Cloudinary in production)
+public/uploads/
+uploads/
+
+# Local development database
+data/
+db.sqlite*
+marketplace-dev.db
+
+# Session storage
+sessions/
+
+# Rate limit storage
+rate-limits/
+
+# AI model cache
+.ai-cache/
+
+# Financial logs (never commit)
+financial-logs/
+payments/
+
+# Security scans
+npm-audit.log
+snyk.json
+
+# Deployment artifacts
+.next/
+build/
+dist/
